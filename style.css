@@ -60,3 +60,6 @@
 .hidden {
     display: none;
 }
+.pow {
+    line-height: 40px;
+}

@@ -4,7 +4,7 @@ let s_operationSign = '';   // Оператор (string)
 let isFinished = false;     // Проверка окончания расчетов (boolean)
 let memory = '';            // Число в памяти (string)
 
-const operations = ['-', '+', 'X', '/'];
+const operations = ['-', '+', 'X', '/', 'Xy'];
 
 const screen = document.querySelector('.calc-screen p');
 
@@ -12,13 +12,13 @@ document.querySelector('.ac').addEventListener('click', ClearAll);
 
 document.querySelector('.calc-buttons').addEventListener('click', (event) => {
     if (!event.target.classList.contains('button')) return;
-    
+
     const key = event.target.textContent;
 
     // Проверка и обработка нажатой кнопки, соответствующей числу
     if (!isNaN(key) || key === '.') {
         if (s_num2 === '' && s_operationSign === '') {
-            if ((key === '.' && s_num1.indexOf('.') !== -1) || ((key === '.') && s_num1 === '' )) return;
+            if ((key === '.' && s_num1.indexOf('.') !== -1) || ((key === '.') && s_num1 === '')) return;
             s_num1 += key;
             s_num1 = CheckLength(s_num1);
             screen.textContent = s_num1;
@@ -63,22 +63,39 @@ document.querySelector('.calc-buttons').addEventListener('click', (event) => {
         isFinished = true;
         return;
     }
+    // Вычисление sin, отображение результата без нажатия кнопки "="
+    if (key === 'sinX') {
+        //s_num2 = s_num1 * (s_num2 / 100);
+        s_operationSign = 'sin';
+        s_num1 = GetResult(s_num1, s_num2, s_operationSign);
+        screen.textContent = s_num1;
+        isFinished = true;
+        return;
+    }
+    if (key === 'cosX') {
+        //s_num2 = s_num1 * (s_num2 / 100);
+        s_operationSign = 'cos';
+        s_num1 = GetResult(s_num1, s_num2, s_operationSign);
+        screen.textContent = s_num1;
+        isFinished = true;
+        return;
+    }
     // Установка в память числа 
-    if (key === 'M') {                                      
+    if (key === 'M') {
         if (memory === '') {
             memory = s_num1;
             document.querySelector('.mem').classList.remove('hidden');
             document.querySelector('.mem').textContent = 'M ' + memory.toString();
         }
         // Удаление числа из памяти
-        else {                                              
+        else {
             document.querySelector('.mem').classList.add('hidden');
             memory = '';
         }
         return;
     }
     // Чтение сохраненного в память числа
-    if (key === 'MR') {                                     
+    if (key === 'MR') {
         if (memory !== '') {
             if (s_num1 === '') {
                 s_num1 = memory;
@@ -93,7 +110,7 @@ document.querySelector('.calc-buttons').addEventListener('click', (event) => {
     }
 })
 // Вычисляет и возвращает результат (число1(string), число2(string), оператор(string))
-const GetResult = (n1, n2, operation) => {                     
+const GetResult = (n1, n2, operation) => {
     switch (operation) {
         case '+':
             n1 = (+n1) + (+n2);
@@ -107,6 +124,15 @@ const GetResult = (n1, n2, operation) => {
         case '/':
             n1 = n1 / n2;
             break;
+        case 'sin':
+            n1 = Math.sin(n1 * (Math.PI / 180));
+            break;
+        case 'cos':
+            n1 = Math.cos(n1 * (Math.PI / 180));
+            break;
+        case 'Xy':
+            n1 = Math.pow(n1, n2);
+            break;
     }
     return CheckLength(n1.toString());
 }
@@ -115,7 +141,7 @@ const CheckLength = (string) => {
     return string.length > 9 ? string.substring(0, 9) : string;
 }
 // Общий сброс
-function ClearAll() {                                       
+function ClearAll() {
     s_num1 = '';
     s_num2 = '';
     s_operationSign = '';
