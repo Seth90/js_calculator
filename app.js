@@ -54,7 +54,7 @@ document.querySelector('.calc-buttons').addEventListener('click', (event) => {
         screen.textContent = s_num1;
         isFinished = true;
         return;
-    }
+    }   
     // Вычисление процентов, отображение результата без нажатия кнопки "="
     if (key === '%') {
         s_num2 = s_num1 * (s_num2 / 100);
@@ -72,6 +72,7 @@ document.querySelector('.calc-buttons').addEventListener('click', (event) => {
         isFinished = true;
         return;
     }
+    // Вычисление cos, отображение результата без нажатия кнопки "="
     if (key === 'cosX') {
         //s_num2 = s_num1 * (s_num2 / 100);
         s_operationSign = 'cos';
